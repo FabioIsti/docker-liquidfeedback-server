@@ -32,8 +32,8 @@ RUN apt-get install -y postgresql libpq-dev
 RUN apt-get install -y pmake
 RUN apt-get install -y imagemagick
 RUN apt-get install -y exim4
-RUN apt-get install -y python3-pip
-RUN pip install markdown2
+RUN apt-get install -y pipx
+RUN pipx install markdown2
 
 # RUN uname -a
 EXPOSE 8080
