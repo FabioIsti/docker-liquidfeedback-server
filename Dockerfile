@@ -5,7 +5,7 @@
 # docker run --sig-proxy=false -p 8080 liquid/feedback
 # ^C to stop
 
-FROM debian:stretch
+FROM debian:stable
 
 MAINTAINER dvn & lynX
 
