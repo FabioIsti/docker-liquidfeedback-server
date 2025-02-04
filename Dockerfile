@@ -79,10 +79,10 @@ RUN cd moonbridge-v1.0.1 ; \
 	cp -f moonbridge_http.lua /opt/moonbridge/
 
 # Install WebMCP
-RUN apt-get install -y libpq-dev postgresql-server-dev-9.6
+RUN apt-get install -y libpq-dev postgresql-server-dev-11
 RUN cp -rf /usr/include/lua5.2/* /usr/include
 RUN cp -rf /usr/include/postgresql/* /usr/include
-RUN cp -rf /usr/include/postgresql/9.6/server/* /usr/include
+RUN cp -rf /usr/include/postgresql/11/server/* /usr/include
 RUN cd /root
 RUN wget -c http://www.public-software-group.org/pub/projects/webmcp/v${LF_WMCP_VERSION}/webmcp-v${LF_WMCP_VERSION}.tar.gz
 RUN tar xzvf webmcp-v${LF_WMCP_VERSION}.tar.gz
