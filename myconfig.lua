@@ -470,5 +470,5 @@ end
 -- ------------------------------------------------------------------------
 -- uncomment the following line to enable debug trace
 -- ------------------------------------------------------------------------
--- config.enable_debug_trace = true
+config.enable_debug_trace = true
 
