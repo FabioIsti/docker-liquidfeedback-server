@@ -4,7 +4,7 @@
 
 -- Name of this instance, defaults to name of config file
 -- ------------------------------------------------------------------------
-config.instance_name = "Demo Site"
+config.instance_name = "RUP ongoing testing"
 
 
 -- Information about service provider (HTML)
