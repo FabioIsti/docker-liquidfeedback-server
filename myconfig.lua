@@ -9,7 +9,7 @@ config.instance_name = "RUP ongoing testing"
 
 -- Information about service provider (HTML)
 -- ------------------------------------------------------------------------
-config.app_service_provider = "Snake Oil<br/>10000 Berlin<br/>Germany"
+config.app_service_provider = "RUP Communication group"
 
 
 -- A HTML formatted text the user has to accept while registering
