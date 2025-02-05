@@ -88,7 +88,7 @@ config.formatting_engines = {
 -- "everything"
 --     -> Show everything a member can see, including profile pages
 -- ------------------------------------------------------------------------
-config.public_access = "everything"
+config.public_access = "anonymous"
 
 
 
