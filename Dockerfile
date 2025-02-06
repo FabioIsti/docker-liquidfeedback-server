@@ -59,8 +59,8 @@ RUN cd /liquid_feedback_core-v${LF_CORE_VERSION} && \
 COPY config_db.sql /tmp
 # USER www-data
 RUN /etc/init.d/postgresql start && sleep 70 && \
-	su - www-data -s /bin/sh -c '/usr/bin/psql -v ON_ERROR_STOP=1 -f /opt/liquid_feedback_core/core.sql liquid_feedback' && \
-	su - www-data -s /bin/sh -c '/usr/bin/psql -f /tmp/config_db.sql liquid_feedback'
+	su www-data -s /bin/sh -c '/usr/bin/psql -v ON_ERROR_STOP=1 -f /opt/liquid_feedback_core/core.sql liquid_feedback' && \
+	su www-data -s /bin/sh -c '/usr/bin/psql -f /tmp/config_db.sql liquid_feedback'
 
 # Create Admin user
 # INSERT INTO member (login, name, admin, password) VALUES ('admin', 'Administrator', TRUE, '$1$/EMPTY/$NEWt7XJg2efKwPm4vectc1');
@@ -109,8 +109,8 @@ COPY myconfig.lua /opt/liquid_feedback_frontend/config/myconfig.lua
 # NOTE: edit example.lua for your needs
 
 RUN mkdir -p /opt/liquid_feedback_core/
-COPY lf_updated /opt/liquid_feedback_core/lf_updated
-RUN chmod +x /opt/liquid_feedback_core/lf_updated
+COPY lf_update /opt/liquid_feedback_core/lf_update
+RUN chmod +x /opt/liquid_feedback_core/lf_update
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -125,6 +125,6 @@ VOLUME /var/log
 
 # executed on run
 CMD /etc/init.d/postgresql start && \
-	/opt/liquid_feedback_core/lf_updated && \
+	/opt/liquid_feedback_core/lf_update && \
 	echo "Starting LiquidFeedback..." && \
-	su - www-data -s /bin/sh -c "/opt/moonbridge/moonbridge /opt/webmcp/bin/mcp.lua /opt/webmcp/ /opt/liquid_feedback_frontend/ main myconfig"
+	su www-data -s /bin/sh -c "/opt/moonbridge/moonbridge /opt/webmcp/bin/mcp.lua /opt/webmcp/ /opt/liquid_feedback_frontend/ main myconfig"
