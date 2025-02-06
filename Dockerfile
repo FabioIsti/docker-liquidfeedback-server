@@ -90,6 +90,7 @@ RUN mkdir -p /opt/webmcp
 RUN cd webmcp-v${LF_WMCP_VERSION} && make && \
 	cp -RL framework/* /opt/webmcp/
 
+
 # Install LiquidFeedback frontend
 WORKDIR "/"
 RUN wget -c http://www.public-software-group.org/pub/projects/liquid_feedback/frontend/v${LF_FEND_VERSION}/liquid_feedback_frontend-v${LF_FEND_VERSION}.tar.gz
@@ -99,18 +100,20 @@ RUN rm -rf /opt/liquid_feedback_frontend ; \
 	mkdir -p /opt/liquid_feedback_frontend/tmp && \
 	chown -R www-data /opt/liquid_feedback_frontend
 COPY myconfig.lua /opt/liquid_feedback_frontend/config/myconfig.lua
-#RUN cd /opt/liquid_feedback_frontend/config && cp -f example.lua myconfig.lua
 
-# Configure email system
-#RUN dpkg-reconfigure exim4-config
-# TODO: copy exim4 config
 
-# Configure frontend
-# NOTE: edit example.lua for your needs
 
+# Create update service
 RUN mkdir -p /opt/liquid_feedback_core/
 COPY lf_update.sh /opt/liquid_feedback_core/lf_update.sh
 RUN chmod +x /opt/liquid_feedback_core/lf_update.sh
+COPY liquid_feedback_core_update.service /etc/systemd/system/liquid_feedback_core_update.service
+
+# Create webapp service
+RUN mkdir -p /opt/liquid_feedback_frontend/
+COPY lf_frontend.sh /opt/liquid_feedback_frontend/lf_frontend.sh
+RUN chmod +x /opt/liquid_feedback_frontend/lf_frontend.sh
+COPY liquid_feedback_core_update.service /etc/systemd/system/liquid_feedback_core_update.service
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -123,8 +126,14 @@ COPY profile /root/.profile
 
 VOLUME /var/log
 
+
+# registering needed services
+RUN systemctl enable postgresql
+RUN systemctl enable liquid_feedback_core_update
+RUN systemctl enable liquid_feedback_frontend
+
+
 # executed on run
-CMD /etc/init.d/postgresql start && \
-	/opt/liquid_feedback_core/lf_update && \
-	echo "Starting LiquidFeedback..." && \
-	su www-data -s /bin/sh -c "/opt/moonbridge/moonbridge /opt/webmcp/bin/mcp.lua /opt/webmcp/ /opt/liquid_feedback_frontend/ main myconfig"
+CMD systemctl --type=service | grep postgresql && \
+	systemctl --type=service | grep liquid && \
+	tail -f "/opt/liquid_feedback_core/lf_core"
