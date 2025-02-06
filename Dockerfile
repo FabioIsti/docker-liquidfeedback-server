@@ -115,6 +115,12 @@ COPY lf_frontend.sh /opt/liquid_feedback_frontend/lf_frontend.sh
 RUN chmod +x /opt/liquid_feedback_frontend/lf_frontend.sh
 COPY liquid_feedback_core_update.service /etc/systemd/system/liquid_feedback_core_update.service
 
+
+RUN mkdir -p /opt/liquid_feedback_utils/
+COPY lf_startup.sh /opt/liquid_feedback_utils/lf_startup.sh
+RUN chmod +x /opt/liquid_feedback_utils/lf_startup.sh
+
+
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -122,18 +128,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # RUN apt-get remove ...
 RUN rm -rf /usr/include /usr/share/man /usr/share/doc
 
-COPY profile /root/.profile
-
 VOLUME /var/log
 
 
-# registering needed services
-RUN systemctl enable postgresql
-RUN systemctl enable liquid_feedback_core_update
-RUN systemctl enable liquid_feedback_frontend
-
-
 # executed on run
-CMD systemctl --type=service | grep postgresql && \
-	systemctl --type=service | grep liquid && \
-	tail -f "/opt/liquid_feedback_core/lf_core"
+CMD /opt/liquid_feedback_utils/lf_startup.sh
