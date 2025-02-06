@@ -109,8 +109,8 @@ COPY myconfig.lua /opt/liquid_feedback_frontend/config/myconfig.lua
 # NOTE: edit example.lua for your needs
 
 RUN mkdir -p /opt/liquid_feedback_core/
-COPY lf_update /opt/liquid_feedback_core/lf_update
-RUN chmod +x /opt/liquid_feedback_core/lf_update
+COPY lf_update.sh /opt/liquid_feedback_core/lf_update.sh
+RUN chmod +x /opt/liquid_feedback_core/lf_update.sh
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
