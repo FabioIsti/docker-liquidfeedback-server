@@ -139,11 +139,15 @@ COPY lf_startup.sh /opt/liquid_feedback_utils/lf_startup.sh
 RUN chmod +x /opt/liquid_feedback_utils/lf_startup.sh
 
 
-# Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # TODO: remove all packages required to build this to reduce image size
 RUN apt-get remove wget
+RUN apt-get remove libbsd-dev
+
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+
 
 
 RUN rm -rf /usr/include /usr/share/man /usr/share/doc
