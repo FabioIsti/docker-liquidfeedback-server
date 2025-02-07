@@ -52,6 +52,7 @@ RUN apt-get install -y sassc
 
 # NB To Delete
 RUN apt-get install -y wget
+RUN apt-get install -y libbsd-dev
 
 # RUN uname -a
 EXPOSE 8080
