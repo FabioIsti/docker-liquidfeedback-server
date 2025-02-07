@@ -11,8 +11,8 @@ MAINTAINER dvn & lynX
 
 ENV HOME /
 
-ENV LF_CORE_VERSION 3.2.2
-ENV LF_FEND_VERSION 3.2.1
+ENV LF_CORE_VERSION 4.2.2
+ENV LF_FEND_VERSION 4.0.0
 ENV LF_WMCP_VERSION 2.1.0
 
 # Regenerate SSH host keys. baseimage-docker does not contain any
