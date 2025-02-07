@@ -7,7 +7,7 @@
 
 FROM debian:buster
 
-MAINTAINER dvn & lynX
+LABEL authors="dvn & lynX, Fabio Sinibaldi" 
 
 ENV HOME /
 
