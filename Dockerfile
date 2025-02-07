@@ -83,19 +83,6 @@ RUN /etc/init.d/postgresql start && sleep 70 && \
 	su www-data -s /bin/sh -c '/usr/bin/psql -f /tmp/config_db.sql liquid_feedback'
 
 
-# Install MoonBridge
-RUN cd /root
-RUN wget -c http://www.public-software-group.org/pub/projects/moonbridge/v1.0.1/moonbridge-v1.0.1.tar.gz
-RUN tar xzvf moonbridge-v1.0.1.tar.gz
-RUN apt-get install -y libbsd-dev
-RUN mkdir -p /opt/moonbridge
-RUN cd moonbridge-v1.0.1 ; \
-	pmake MOONBR_LUA_PATH=/opt/moonbridge/?.lua && \
-	cp -f moonbridge /opt/moonbridge/ && \
-	cp -f moonbridge_http.lua /opt/moonbridge/
-
-
-
 # Install WebMCP
 RUN apt-get install -y libpq-dev postgresql-server-dev-11
 RUN cp -rf /usr/include/lua5.3/* /usr/include
@@ -107,6 +94,19 @@ RUN tar xzvf webmcp-v${LF_WMCP_VERSION}.tar.gz
 RUN mkdir -p /opt/webmcp
 RUN cd webmcp-v${LF_WMCP_VERSION} && make && \
 	cp -RL framework/* /opt/webmcp/
+
+
+
+# Install MoonBridge
+RUN cd /root
+RUN wget -c http://www.public-software-group.org/pub/projects/moonbridge/v1.0.1/moonbridge-v1.0.1.tar.gz
+RUN tar xzvf moonbridge-v1.0.1.tar.gz
+RUN mkdir -p /opt/moonbridge
+RUN cd moonbridge-v1.0.1 ; \
+	pmake MOONBR_LUA_PATH=/opt/moonbridge/?.lua && \
+	cp -f moonbridge /opt/moonbridge/ && \
+	cp -f moonbridge_http.lua /opt/moonbridge/
+
 
 
 # Install LiquidFeedback frontend
