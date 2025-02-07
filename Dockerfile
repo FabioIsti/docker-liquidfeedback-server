@@ -40,7 +40,7 @@ RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y build-essential    
 RUN apt-get install -y postgresql
-RUN apt-get install -y postgresql-server-dev-12
+RUN apt-get install -y postgresql-server-dev-11
 RUN apt-get install -y libbsd-dev
 RUN apt-get install -y lua5.3
 RUN apt-get install -y liblua5.3-dev
