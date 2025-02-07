@@ -5,15 +5,25 @@
 # docker run --sig-proxy=false -p 8080 liquid/feedback
 # ^C to stop
 
+# WARNINGS 
+# LegacyKeyValueFormat: "ENV key=value" should be used instead of legacy "ENV key value" format (line 15)
+# - LegacyKeyValueFormat: "ENV key=value" should be used instead of legacy "ENV key value" format (line 16)
+# - MultipleInstructionsDisallowed: Multiple CMD instructions should not be used in the same stage because only the last one will be used (line 22)
+# - JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 135)
+# - LegacyKeyValueFormat: "ENV key=value" should be used instead of legacy "ENV key value" format (line 12)
+# - LegacyKeyValueFormat: "ENV key=value" should be used instead of legacy "ENV key value" format (line 14)
+#
+
+
 FROM debian:buster
 
 LABEL authors="dvn & lynX, Fabio Sinibaldi" 
 
-ENV HOME /
+ENV HOME=/
 
-ENV LF_CORE_VERSION 4.2.2
-ENV LF_FEND_VERSION 4.0.0
-ENV LF_WMCP_VERSION 2.1.0
+ENV LF_CORE_VERSION=4.2.2
+ENV LF_FEND_VERSION=4.0.0
+ENV LF_WMCP_VERSION=2.1.0
 
 # Regenerate SSH host keys. baseimage-docker does not contain any
 #RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
@@ -21,19 +31,24 @@ ENV LF_WMCP_VERSION 2.1.0
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
 
+
 # create code directory
 RUN mkdir -p /opt/code/
-# install packages required to compile vala and radare2
+
+# Install dependencies 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install -y build-essential wget apt-utils
-RUN apt-get install -y lua5.2 liblua5.2-dev
-RUN apt-get install -y postgresql libpq-dev
-RUN apt-get install -y pmake
+RUN apt-get install -y build-essential    
+RUN apt-get install -y postgresql
+RUN apt-get install -y postgresql-server-dev-12
+RUN apt-get install -y libbsd-dev
+RUN apt-get install -y lua5.3
+RUN apt-get install -y liblua5.3-dev
+RUN apt-get install -y mercurial
+RUN apt-get install -y bmake
+RUN apt-get install -y lsb-release
 RUN apt-get install -y imagemagick
-RUN apt-get install -y exim4
-RUN apt-get install -y python-pip
-RUN pip install markdown2
+RUN apt-get install -y sassc
 
 # RUN uname -a
 EXPOSE 8080
@@ -45,12 +60,13 @@ RUN /etc/init.d/postgresql start && \
 	createlang plpgsql liquid_feedback ; \
 	createuser --no-superuser --createdb --no-createrole www-data
 
+
+# Install CORE
 USER root
 RUN cd /
 RUN wget -c http://www.public-software-group.org/pub/projects/liquid_feedback/backend/v${LF_CORE_VERSION}/liquid_feedback_core-v${LF_CORE_VERSION}.tar.gz
 RUN tar xzvf liquid_feedback_core-v${LF_CORE_VERSION}.tar.gz
 RUN cd liquid_feedback_core-v${LF_CORE_VERSION} && make
-
 RUN mkdir -p /opt/liquid_feedback_core
 RUN cd /liquid_feedback_core-v${LF_CORE_VERSION} && \
 	cp -f core.sql lf_update lf_update_issue_order lf_update_suggestion_order \
@@ -62,10 +78,6 @@ RUN /etc/init.d/postgresql start && sleep 70 && \
 	su www-data -s /bin/sh -c '/usr/bin/psql -v ON_ERROR_STOP=1 -f /opt/liquid_feedback_core/core.sql liquid_feedback' && \
 	su www-data -s /bin/sh -c '/usr/bin/psql -f /tmp/config_db.sql liquid_feedback'
 
-# Create Admin user
-# INSERT INTO member (login, name, admin, password) VALUES ('admin', 'Administrator', TRUE, '$1$/EMPTY/$NEWt7XJg2efKwPm4vectc1');
-# \q
-# exit
 
 # Install MoonBridge
 RUN cd /root
@@ -78,9 +90,11 @@ RUN cd moonbridge-v1.0.1 ; \
 	cp -f moonbridge /opt/moonbridge/ && \
 	cp -f moonbridge_http.lua /opt/moonbridge/
 
+
+
 # Install WebMCP
 RUN apt-get install -y libpq-dev postgresql-server-dev-11
-RUN cp -rf /usr/include/lua5.2/* /usr/include
+RUN cp -rf /usr/include/lua5.3/* /usr/include
 RUN cp -rf /usr/include/postgresql/* /usr/include
 RUN cp -rf /usr/include/postgresql/11/server/* /usr/include
 RUN cd /root
