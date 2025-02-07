@@ -50,6 +50,9 @@ RUN apt-get install -y lsb-release
 RUN apt-get install -y imagemagick
 RUN apt-get install -y sassc
 
+# NB To Delete
+RUN apt-get install -y wget
+
 # RUN uname -a
 EXPOSE 8080
 
@@ -139,7 +142,9 @@ RUN chmod +x /opt/liquid_feedback_utils/lf_startup.sh
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # TODO: remove all packages required to build this to reduce image size
-# RUN apt-get remove ...
+RUN apt-get remove wget
+
+
 RUN rm -rf /usr/include /usr/share/man /usr/share/doc
 
 VOLUME /var/log
