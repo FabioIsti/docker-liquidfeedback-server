@@ -42,8 +42,8 @@ RUN apt-get install -y build-essential
 RUN apt-get install -y postgresql
 RUN apt-get install -y postgresql-server-dev-11
 RUN apt-get install -y libbsd-dev
-RUN apt-get install -y lua5.3
-RUN apt-get install -y liblua5.3-dev
+RUN apt-get install -y lua5.2
+RUN apt-get install -y liblua5.2-dev
 RUN apt-get install -y mercurial
 RUN apt-get install -y bmake
 RUN apt-get install -y lsb-release
@@ -85,7 +85,7 @@ RUN /etc/init.d/postgresql start && sleep 70 && \
 
 # Install WebMCP
 RUN apt-get install -y libpq-dev postgresql-server-dev-11
-RUN cp -rf /usr/include/lua5.3/* /usr/include
+RUN cp -rf /usr/include/lua5.2/* /usr/include
 RUN cp -rf /usr/include/postgresql/* /usr/include
 RUN cp -rf /usr/include/postgresql/11/server/* /usr/include
 RUN cd /root
