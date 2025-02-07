@@ -1,12 +1,15 @@
 #!/bin/sh
 
 echo "Starting postgresql ..."
-service start postgresql
+/etc/init.d/postgresql start
 
 echo "Starting LiquidFeedback Update Service... "
-service start liquid_feedback_core
+/opt/liquid_feedback_core/lf_update.sh  2>&1 | logger -t "lf_update" &
 
 echo "Starting Liquid Feedback Frontend... "
-service start liquid_feedback_frontend
+/opt/liquid_feedback_frontend/lf_frontend.sh 2>&1 | logger -t "lf_frontend" &
 
-tail -f "/opt/liquid_feedback_core/lf_core"
+echo "Startup point" > /var/log/syslog
+echo "TODO fi logging" > /var/log/syslog
+
+tail -f /var/log/syslog
